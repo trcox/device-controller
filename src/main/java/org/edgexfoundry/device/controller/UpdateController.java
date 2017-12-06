@@ -35,6 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UpdateController {
 
+  private static final String PROV_WATCHER_TYPE = "ProvisionWatcher";
+  private static final String DEVICE_TYPE = "Device";
+  private static final String PROFILE_TYPE = "Profile";
+
   private static final EdgeXLogger logger =
       EdgeXLoggerFactory.getEdgeXLogger(UpdateController.class);
 
@@ -48,32 +52,36 @@ public class UpdateController {
   public void getCallback(HttpServletRequest request,
       @RequestBody(required = false) CallbackAlert data) {
 
-    ActionType actionType = data.getType();
-    String id = data.getId();
-    String method = request.getMethod();
+    if (data != null) {
+      ActionType actionType = data.getType();
+      String id = data.getId();
+      String method = request.getMethod();
 
-    if (actionType == null || id == null || method == null) {
-      throw new ClientException("Callback parameters were null");
-    }
+      if (actionType == null || id == null || method == null) {
+        throw new ClientException("Callback parameters were null");
+      }
 
-    switch (actionType) {
-      case DEVICE:
-        deviceUpdate(id, method);
-        break;
-      case PROFILE:
-        if (method.equals("PUT")) {
-          updateProfile(id);
-        }
-        break;
-      case PROVISIONWATCHER:
-        provisionWatcherUpdate(id, method);
-        break;
-      case SCHEDULE:
-      case SCHEDULEEVENT:
-        scheduleUpdate(data, method);
-        break;
-      default:
-        break;
+      switch (actionType) {
+        case DEVICE:
+          deviceUpdate(id, method);
+          break;
+        case PROFILE:
+          if (method.equals("PUT")) {
+            updateProfile(id);
+          }
+          break;
+        case PROVISIONWATCHER:
+          provisionWatcherUpdate(id, method);
+          break;
+        case SCHEDULE:
+        case SCHEDULEEVENT:
+          scheduleUpdate(data, method);
+          break;
+        default:
+          break;
+      }
+    } else {
+      logger.error("No data supplied to update controller");
     }
   }
 
@@ -132,7 +140,7 @@ public class UpdateController {
             + provisionWatcher);
       } else {
         logger.error("Received add device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher", provisionWatcher);
+        throw new NotFoundException(PROV_WATCHER_TYPE, provisionWatcher);
       }
     }
   }
@@ -143,7 +151,7 @@ public class UpdateController {
         logger.debug("Update device provision watcher with id:" + provisionWatcher);
       } else {
         logger.error("Received update device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher", provisionWatcher);
+        throw new NotFoundException(PROV_WATCHER_TYPE, provisionWatcher);
       }
     }
   }
@@ -154,7 +162,7 @@ public class UpdateController {
         logger.debug("Remove device provision watcher with id:" + provisionWatcher);
       } else {
         logger.error("Received remove device provision watcher request without an id attached.");
-        throw new NotFoundException("provisionWatcher", provisionWatcher);
+        throw new NotFoundException(PROV_WATCHER_TYPE, provisionWatcher);
       }
     }
   }
@@ -165,7 +173,7 @@ public class UpdateController {
         logger.debug("Added device.  Received add device request with id:" + deviceId);
       } else {
         logger.error("Received add device request without a device id attached.");
-        throw new NotFoundException("device", deviceId);
+        throw new NotFoundException(DEVICE_TYPE, deviceId);
       }
     }
   }
@@ -176,7 +184,7 @@ public class UpdateController {
         logger.debug("Updated device. Received update device request with id:" + deviceId);
       } else {
         logger.error("Received update device request without a device id attached.");
-        throw new NotFoundException("device", deviceId);
+        throw new NotFoundException(DEVICE_TYPE, deviceId);
       }
     }
   }
@@ -187,7 +195,7 @@ public class UpdateController {
         logger.debug("Removing device. Received delete device request with id:" + deviceId);
       } else {
         logger.error("Received delete device request without a device id attached.");
-        throw new NotFoundException("device", deviceId);
+        throw new NotFoundException(DEVICE_TYPE, deviceId);
       }
     }
   }
@@ -198,7 +206,7 @@ public class UpdateController {
         logger.debug("Updated profile. Received update profile request with id:" + profileId);
       } else {
         logger.error("Received update profile request without a profile id attached.");
-        throw new NotFoundException("profile", profileId);
+        throw new NotFoundException(PROFILE_TYPE, profileId);
       }
     }
   }
