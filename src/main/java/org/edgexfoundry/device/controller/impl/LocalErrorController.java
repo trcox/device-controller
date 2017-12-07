@@ -15,7 +15,7 @@
  * @author: Tyler Cox, Dell
  * @version: 1.0.0
  *******************************************************************************/
-package org.edgexfoundry.device.controller;
+package org.edgexfoundry.device.controller.impl;
 
 import java.util.Map;
 

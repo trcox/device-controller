@@ -11,8 +11,8 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  *
- * @microservice: device-new-service
- * @author: Tyler Cox, Dell
+ * @microservice: device-controller
+ * @author: Jim White, Dell
  * @version: 1.0.0
  *******************************************************************************/
 
@@ -21,42 +21,9 @@ package org.edgexfoundry.device.controller;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.edgexfoundry.service.handler.CommandHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+public interface CommandController {
+  Callable<Map<String, String>> getCommand(String deviceId, String cmd, String arguments);
 
-@RestController
-@RequestMapping("/api/v1/device")
-public class CommandController {
+  Callable<Map<String, String>> getCommands(String cmd, String arguments);
 
-  @Autowired
-  private CommandHandler command;
-
-  @RequestMapping(value = "/{deviceId}/{cmd}",
-      method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
-  public Callable<Map<String, String>> getCommand(@PathVariable String deviceId,
-      @PathVariable String cmd, @RequestBody(required = false) String arguments) {
-    return new Callable<Map<String, String>>() {
-      @Override
-      public Map<String, String> call() throws Exception {
-        return command.getResponse(deviceId, cmd, arguments);
-      }
-    };
-  }
-
-  @RequestMapping(value = "/all/{cmd}",
-      method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
-  public Callable<Map<String, String>> getCommands(@PathVariable String cmd,
-      @RequestBody(required = false) String arguments) {
-    return new Callable<Map<String, String>>() {
-      @Override
-      public Map<String, String> call() throws Exception {
-        return command.getResponses(cmd, arguments);
-      }
-    };
-  }
 }
