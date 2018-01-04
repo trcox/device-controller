@@ -21,9 +21,12 @@ package org.edgexfoundry.device.controller;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public interface CommandController {
-  Callable<Map<String, String>> getCommand(String deviceId, String cmd, String arguments);
+import javax.servlet.http.HttpServletRequest;
 
-  Callable<Map<String, String>> getCommands(String cmd, String arguments);
+public interface CommandController {
+
+  Callable<Map<String, String>> getCommand(String deviceId, String cmd, String arguments, HttpServletRequest request);
+
+  Callable<Map<String, String>> getCommands(String cmd, String arguments, HttpServletRequest request);
 
 }

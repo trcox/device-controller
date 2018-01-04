@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/")
 public class ServiceControllerImpl implements ServiceController {
 
-  private static final EdgeXLogger logger =
-      EdgeXLoggerFactory.getEdgeXLogger(ServiceControllerImpl.class);
+  private final EdgeXLogger logger =
+      EdgeXLoggerFactory.getEdgeXLogger(this.getClass());
 
   @Autowired
   ObjectTransform transform;

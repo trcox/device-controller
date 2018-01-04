@@ -26,10 +26,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import javax.servlet.http.HttpServletRequest;
 
 @Category(RequiresNone.class)
-public class CommandControllerTest {
+public class CommandControllerTest extends Mockito {
 
   private static final String TEST_DEVICE_ID = "test_device";
   private static final String TEST_CMD = "test_cmd";
@@ -48,12 +50,16 @@ public class CommandControllerTest {
 
   @Test
   public void testGetCommand() {
-    controller.getCommand(TEST_DEVICE_ID, TEST_CMD, TEST_ARGS);
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getMethod()).thenReturn("PUT");
+    controller.getCommand(TEST_DEVICE_ID, TEST_CMD, TEST_ARGS, request);
   }
 
   @Test
   public void testGetCommands() {
-    controller.getCommands(TEST_CMD, TEST_ARGS);
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getMethod()).thenReturn("PUT");
+    controller.getCommands(TEST_CMD, TEST_ARGS, request);
   }
 
 }

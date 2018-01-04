@@ -31,13 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/ping")
 public class StatusControllerImpl implements StatusController {
 
-  private static final EdgeXLogger logger =
-      EdgeXLoggerFactory.getEdgeXLogger(StatusControllerImpl.class);
+  private final EdgeXLogger logger =
+      EdgeXLoggerFactory.getEdgeXLogger(this.getClass());
+  
+  public static final String PING_RESPONSE = "pong";
 
   @Override
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody String ping() {
     logger.debug("Device service pinged - yes its up!");
-    return "pong";
+    return PING_RESPONSE;
   }
 }

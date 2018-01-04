@@ -21,6 +21,8 @@ package org.edgexfoundry.device.controller.impl;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.edgexfoundry.device.controller.CommandController;
 import org.edgexfoundry.service.handler.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +43,12 @@ public class CommandControllerImpl implements CommandController {
   @RequestMapping(value = "/{deviceId}/{cmd}",
       method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
   public Callable<Map<String, String>> getCommand(@PathVariable String deviceId,
-      @PathVariable String cmd, @RequestBody(required = false) String arguments) {
+      @PathVariable String cmd, @RequestBody(required = false) String arguments,
+      HttpServletRequest request) {
     return new Callable<Map<String, String>>() {
       @Override
       public Map<String, String> call() throws Exception {
-        return command.getResponse(deviceId, cmd, arguments);
+        return command.getResponse(deviceId, cmd, arguments, request.getMethod());
       }
     };
   }
@@ -54,11 +57,11 @@ public class CommandControllerImpl implements CommandController {
   @RequestMapping(value = "/all/{cmd}",
       method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.GET})
   public Callable<Map<String, String>> getCommands(@PathVariable String cmd,
-      @RequestBody(required = false) String arguments) {
+      @RequestBody(required = false) String arguments, HttpServletRequest request) {
     return new Callable<Map<String, String>>() {
       @Override
       public Map<String, String> call() throws Exception {
-        return command.getResponses(cmd, arguments);
+        return command.getResponses(cmd, arguments, request.getMethod());
       }
     };
   }

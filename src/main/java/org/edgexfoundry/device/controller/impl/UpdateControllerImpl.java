@@ -40,8 +40,8 @@ public class UpdateControllerImpl implements UpdateController {
   private static final String DEVICE_TYPE = "Device";
   private static final String PROFILE_TYPE = "Profile";
 
-  private static final EdgeXLogger logger =
-      EdgeXLoggerFactory.getEdgeXLogger(UpdateControllerImpl.class);
+  private final EdgeXLogger logger =
+      EdgeXLoggerFactory.getEdgeXLogger(this.getClass());
 
   @Autowired
   UpdateHandler update;
